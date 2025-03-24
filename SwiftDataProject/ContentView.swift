@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
+    
     @Query(sort: \User.name) var users: [User]
     
     // Path == empty array of User
     @State private var path = [User]()
+    let name = ""
     
     
     var body: some View {
