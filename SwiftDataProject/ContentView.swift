@@ -14,7 +14,7 @@ struct ContentView: View {
     
     // Path == empty array of User
     @State private var path = [User]()
-    let name = ""
+
     
     
     var body: some View {
