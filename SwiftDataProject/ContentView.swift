@@ -28,6 +28,7 @@ struct ContentView: View {
             }
             .toolbar{
                 Button("Add User", systemImage: "plus"){
+                    //
                     // Our user is a NEW USER
                     // no name, no city
                     let user = User(name: "", city: "", joinDate: .now)
