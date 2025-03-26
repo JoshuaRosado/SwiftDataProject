@@ -10,39 +10,17 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     
-    // filtering the #Predicate of User class model
-    // If equation is true, then add user to our model
-    // display each user that contains an "B" in its name
-    @Query(filter: #Predicate<User> { user in
-        user.name.localizedStandardContains("N") &&
-        user.city == "Vega Baja"
-    }, sort: \User.name) var users: [User]
-    
-    
-    // Rewriting this query to be readable!
-    
-//    @Query(filter: #Predicate<User>) { user in {
-//        if user.name.localizedStandardContains("N"){
-//            if user.city == "Vega Baja"{
-//                return true
-//            }
-//            return false
-//        }
-//        return false
-//    }}
-    
-    
-    @Query(filter: #Predicate<User> { user in
-        user.age > 30 && user.city == "Vega Baja"
-    } , sort: \User.age) var users2 : [User]
-
+    @State private var sortOrder = [
+        SortDescriptor(\User.name),
+        SortDescriptor(\User.joinDate)
+    ]
+        
+    @State private var showingUpComingOnly = false
     var body: some View {
         NavigationStack{
-            List(users2){ user in
-                
-                    Text(user.name)
-                
-            }
+            // If BOOL is true pass in (Date.now) else pass in (Date.distantPast)
+            UsersView(minimumJoinDate: showingUpComingOnly ? .now : .distantPast, sortOrder: sortOrder)
+           
             .navigationTitle("Users")
             
             
@@ -68,6 +46,27 @@ struct ContentView: View {
                     modelContext.insert(fifth)
                     
                     
+                }
+                
+                Button(showingUpComingOnly ? "Show Everyone" : " Show Upcoming") {
+                    showingUpComingOnly.toggle()
+                }
+                
+                // Using Menu to sort data
+                Menu("Sort", systemImage: "arrow.up.arrow.down"){
+                    Picker("Sort", selection: $sortOrder){
+                        Text("Sort by Name")
+                        //modifier called tag(), which lets us attach specific values of our choosing to each picker option
+                            .tag([
+                                SortDescriptor(\User.name),
+                                SortDescriptor(\User.joinDate)
+                            ])
+                        Text("Sort by Join Date")
+                            .tag([
+                                SortDescriptor(\User.joinDate),
+                                SortDescriptor(\User.name)
+                            ])
+                    }
                 }
             }
         }
