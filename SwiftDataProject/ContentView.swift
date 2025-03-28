@@ -10,17 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     
+    @State private var showingUpcomingOnly = false
+    
     @State private var sortOrder = [
         SortDescriptor(\User.name),
         SortDescriptor(\User.joinDate)
     ]
-        
-    @State private var showingUpComingOnly = false
+
+    
     var body: some View {
         NavigationStack{
-            // If BOOL is true pass in (Date.now) else pass in (Date.distantPast)
-            UsersView(minimumJoinDate: showingUpComingOnly ? .now : .distantPast, sortOrder: sortOrder)
-           
+            // If BOOL is true
+            // pass in current time (.now)
+            // Only people who join after that date will be shown
+            UsersView(minimumJoinDate: showingUpcomingOnly ? .now : .distantPast, sortOrder: sortOrder)
             .navigationTitle("Users")
             
             
@@ -48,24 +51,26 @@ struct ContentView: View {
                     
                 }
                 
-                Button(showingUpComingOnly ? "Show Everyone" : " Show Upcoming") {
-                    showingUpComingOnly.toggle()
+                Button(showingUpcomingOnly ? "Show Everyone" : "Show Upcoming"){
+                    showingUpcomingOnly.toggle()
+                    
                 }
-                
-                // Using Menu to sort data
                 Menu("Sort", systemImage: "arrow.up.arrow.down"){
                     Picker("Sort", selection: $sortOrder){
                         Text("Sort by Name")
-                        //modifier called tag(), which lets us attach specific values of our choosing to each picker option
-                            .tag([
-                                SortDescriptor(\User.name),
-                                SortDescriptor(\User.joinDate)
-                            ])
+                            .tag(
+                                [
+                                    SortDescriptor(\User.name),
+                                    SortDescriptor(\User.joinDate)
+                                ]
+                            )
                         Text("Sort by Join Date")
-                            .tag([
-                                SortDescriptor(\User.joinDate),
-                                SortDescriptor(\User.name)
-                            ])
+                            .tag(
+                                [
+                                    SortDescriptor(\User.joinDate),
+                                    SortDescriptor(\User.name)
+                                ]
+                            )
                     }
                 }
             }
