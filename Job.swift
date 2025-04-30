@@ -8,10 +8,16 @@
 import Foundation
 import SwiftData
 
+
+
+// SwiftData with iCloud has requirements that local SwiftData does not
+// All properties must be optional or have a default values, and all relationship must be optional
+
 @Model
 class Job {
-    var name: String
-    var priority: Int
+    // Adjusting properties with default values
+    var name: String = "None"
+    var priority: Int = 1
     // Linking this model with User model somehow
     var owner: User?
     

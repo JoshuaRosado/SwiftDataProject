@@ -10,19 +10,27 @@ import SwiftData
 
 @Model
 
+// SwiftData with iCloud has requirements that local SwiftData does not
+// All properties must be optional or have a default values, and all relationship must be optional
+
 class User {
-    var name: String
-    var city: String
-    var joinDate: Date
-    var age : Int
+    // Adjust properties with default values
+    var name: String = "Anonymous"
+    var city: String = "Unknown"
+    var joinDate: Date = Date.now
+    var age : Int = 1
     // @Relationship == Modifier - WHEN DELETE THE USER, DELETE THEIR JOBS AS WELL
-    @Relationship(deleteRule: .cascade) var jobs = [Job]() // empty Job array
+    // This is a relationship so it must be Optional
+    @Relationship(deleteRule: .cascade) var jobs: [Job]? = [Job]()
+    // var jobs is a optional Array of Job = Empty Array of Job Default
+
     
-    // ** MIGRATION = SwiftData will silently add the jobs property to all its existing users, giving them an empty array by default
-    
-    // ** MIGRATION = Moving, adapting, updating or data from one environment to another
-    
-    
+    // unwrappedJobs is an Array of Job
+    var unwrappedJobs: [Job] {
+        jobs ?? []
+        //send back jobs if not ?? send an empty array
+        
+    }
     init(name: String, city: String, joinDate: Date, age: Int, job: [Job] = [Job]()) {
         self.name = name
         self.city = city
